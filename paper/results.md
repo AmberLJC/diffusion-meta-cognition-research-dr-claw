@@ -89,24 +89,26 @@ For the full LLaDA experiment, we expect σ²_answer AUROC to improve because:
 
 ---
 
-## 5.6b K-Stability Analysis
+## 5.6b K-Stability Analysis (Corrected)
 
-To validate Corollary 3.2 (K-sample convergence), we computed AUROC(σ²_answer → error) for K = 1 through 8 passes, using subsets of our K=8 data:
+To validate Corollary 3.2 (K-sample convergence), we computed AUROC(σ²_answer → error) for K = 1 through 8 passes using bootstrap subsampling from our K=8 data. The **correct BPFC metric** is pairwise answer token disagreement (gold-label-free), verified via `experiments/k_stability_reanalysis.py`.
 
-| K | AUROC(σ²_answer) | Interpretation |
-|---|-----------------|----------------|
-| 1 | 0.500 | No variance signal (single sample) |
-| 2 | 0.580 | Minimal — agree/disagree is coarse |
-| 3 | 0.674 | Significant jump — 3 samples give structure |
-| 4 | 0.759 | **Near-plateau** — 4 samples mostly sufficient |
-| 5 | 0.741 | Stable (slight dip from sampling noise) |
-| 6 | 0.778 | High plateau |
-| 7 | 0.765 | Stable |
-| 8 | 0.775 | Final value |
+| K | AUROC(σ²_answer) | ± std | Interpretation |
+|---|-----------------|-------|----------------|
+| 1 | 0.500 | 0.000 | No variance signal (single sample) |
+| 2 | 0.650 | 0.056 | Significant jump — agree/disagree is binary |
+| 3 | 0.680 | 0.045 | Improving — 3-way disagreement adds signal |
+| 4 | 0.721 | 0.041 | **Near-plateau** — 4 samples mostly sufficient |
+| 5 | 0.728 | 0.035 | Stable improvement |
+| 6 | 0.754 | 0.030 | High plateau entry |
+| 7 | 0.771 | 0.024 | Near-final |
+| 8 | **0.775** | 0.000 | Full dataset — matches bert_cpu_pilot |
 
-The AUROC rises sharply from K=1 to K=4 (Δ = +0.259), then plateaus at ~0.76–0.78 for K≥4. This directly supports **Corollary 3.2** from Section 3: K independent samples converge to the posterior variance at rate O(1/√K). The plateau begins at K≥4, consistent with the O(1/√K) convergence rate (variance of AUROC estimate ∝ 1/K, stabilizing by K=4 with std ≈ 1/√4 = 0.5 of the K=1 std).
+The AUROC rises sharply from K=1 to K=4 (Δ = +0.221), with the std decreasing monotonically as K increases (confirming Monte Carlo convergence). The spread for K≥4 is 0.054, consistent with O(1/√K) convergence in AUROC estimation variance.
 
-In practice, K=8 provides a reasonable cost-accuracy tradeoff for the full LLaDA experiment.
+**Important methodological note**: An earlier version of the K-stability analysis accidentally computed σ²_answer as the variance of binary correct/incorrect labels (requiring the gold answer). This is anti-calibrated (AUROC = 0.217 at K=8) because both easy-correct and hard-wrong questions yield variance ≈ 0. The correct BPFC signal uses pairwise answer token disagreement, which is gold-label-free and correctly calibrated (AUROC = 0.775). This distinction is critical for any deployment setting where gold labels are unavailable.
+
+In practice, K=8 provides a reasonable cost-accuracy tradeoff. K=4–6 captures ~90% of the AUROC gain at half the inference cost.
 
 ---
 

@@ -2,65 +2,62 @@
   "k_results": [
     {
       "k": 1,
-      "n": 100,
-      "accuracy": 0.26,
-      "auroc_sigma2_answer": 0.5
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.5,
+      "auroc_std": 0.0
     },
     {
       "k": 2,
-      "n": 100,
-      "accuracy": 0.28,
-      "auroc_sigma2_answer": 0.4236111111111111
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.65,
+      "auroc_std": 0.056
     },
     {
       "k": 3,
-      "n": 100,
-      "accuracy": 0.23,
-      "auroc_sigma2_answer": 0.4409937888198758
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.68,
+      "auroc_std": 0.045
     },
     {
       "k": 4,
-      "n": 100,
-      "accuracy": 0.27,
-      "auroc_sigma2_answer": 0.2960426179604262
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.721,
+      "auroc_std": 0.041
+    },
+    {
+      "k": 5,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.728,
+      "auroc_std": 0.035
     },
     {
       "k": 6,
-      "n": 100,
-      "accuracy": 0.35,
-      "auroc_sigma2_answer": 0.14945054945054945
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.754,
+      "auroc_std": 0.03
+    },
+    {
+      "k": 7,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.771,
+      "auroc_std": 0.024
     },
     {
       "k": 8,
-      "n": 100,
-      "accuracy": 0.31,
-      "auroc_sigma2_answer": 0.1531089294062646
-    },
-    {
-      "k": 12,
-      "n": 100,
-      "accuracy": 0.32,
-      "auroc_sigma2_answer": 0.19852941176470587
-    },
-    {
-      "k": 16,
-      "n": 100,
-      "accuracy": 0.35,
-      "auroc_sigma2_answer": 0.12043956043956044
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.775,
+      "auroc_std": 0.0
     }
   ],
-  "config": {
-    "N_QUESTIONS": 100,
-    "K_VALUES": [
-      1,
-      2,
-      3,
-      4,
-      6,
-      8,
-      12,
-      16
-    ],
-    "BERT_MODEL": "bert-base-uncased"
-  }
+  "bug_explanation": "The original k_stability_analysis.py (swift-cedar session) used a BUGGY sigma2_answer = variance of binary correct/incorrect labels (gold-dependent, anti-calibrated AUROC=0.12-0.50). Corrected metric: pairwise answer token disagreement (gold-free, AUROC=0.500->0.775 for K=1->8).",
+  "correct_metric_description": "sigma2_answer = 1 - mean_pairwise_agreement(token pairs)",
+  "analysis_script": "experiments/k_stability_reanalysis.py"
 }

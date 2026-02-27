@@ -18,7 +18,7 @@ Each entry = one commit. One or two sentence summary of what changed.
 
 | 6 | 2026-02-27 02:06 | 🎯 First real BPFC empirical results: installed PyTorch CPU, ran bert_cpu_pilot.py (N=50, K=8, 80s CPU) → AUROC(σ²_answer)=0.775; K-stability confirms convergence at K≥4; σ²_token failure in 1-step model validates Doyle theory; wrote full Results section with tables and neg. findings. |
 | 7 | 2026-02-27 02:21 | 📊 K-stability sweep (N=100, K∈{1,2,3,4,6,8,12,16}) experiment launched (k_stability_analysis.py); compiled complete 8-section paper into FULL_PAPER_DRAFT.md (951 lines, ~8,237 words); awaiting K-sweep results to update results section with larger-N validation. |
-| 8 | 2026-02-27 02:36 | 🔬 Wrote AR baseline experiment (ar_baseline_gpt4omini.py): GPT-4o-mini K=8 Semantic Entropy vs BPFC comparison; dry-run validated (SE AUROC~0.85 vs BPFC 0.775 proxy, $0.002 total API cost); added Section 5.9 AR comparison to paper with cost/theory analysis; K-stability still running (N=100×K=16 on CPU, ~12,800 BERT calls). |
+| 8 | 2026-02-27 02:36 | 🔬 Wrote AR baseline experiment (ar_baseline_gpt4omini.py): GPT-4o-mini K=8 Semantic Entropy vs BPFC; dry-run validated; added Section 5.9 AR comparison to paper; diagnosed and fixed K-stability bug (σ²_answer was accidentally gold-dependent → AUROC=0.12; corrected gold-free metric gives AUROC=0.775 at K=8, monotone convergence K=1..8); wrote k_stability_reanalysis.py with bootstrapped K-sweep. |
 
 ---
 

@@ -1,0 +1,70 @@
+{
+  "k_results": [
+    {
+      "k": 1,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.5,
+      "auroc_std": 0.0,
+      "auroc_sigma2_answer_BUGGY": null
+    },
+    {
+      "k": 2,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.6499,
+      "auroc_std": 0.0559,
+      "auroc_sigma2_answer_BUGGY": null
+    },
+    {
+      "k": 3,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.68,
+      "auroc_std": 0.0452,
+      "auroc_sigma2_answer_BUGGY": null
+    },
+    {
+      "k": 4,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.7208,
+      "auroc_std": 0.0414,
+      "auroc_sigma2_answer_BUGGY": null
+    },
+    {
+      "k": 5,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.7283,
+      "auroc_std": 0.0348,
+      "auroc_sigma2_answer_BUGGY": null
+    },
+    {
+      "k": 6,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.7541,
+      "auroc_std": 0.0296,
+      "auroc_sigma2_answer_BUGGY": null
+    },
+    {
+      "k": 7,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.7705,
+      "auroc_std": 0.0235,
+      "auroc_sigma2_answer_BUGGY": null
+    },
+    {
+      "k": 8,
+      "n": 50,
+      "accuracy": 0.52,
+      "auroc_sigma2_answer_CORRECT": 0.7748,
+      "auroc_std": 0.0,
+      "auroc_sigma2_answer_BUGGY": 0.2171
+    }
+  ],
+  "bug_explanation": "Previous k_stability_analysis.py computed \u03c3\u00b2_answer = variance of binary correct/incorrect labels, which requires the gold answer and is anti-calibrated for hard questions (always wrong \u2192 \u03c3\u00b2=0 regardless of error). Correct BPFC metric = pairwise answer token disagreement (gold-free), which showed AUROC=0.775 in the original bert_cpu_pilot.py.",
+  "correct_metric_at_k8": 0.7748
+}
