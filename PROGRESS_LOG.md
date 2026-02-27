@@ -30,4 +30,6 @@ Each entry = one commit. One or two sentence summary of what changed.
 
 | 12 | 2026-02-27 03:51 | 📐 Generated 4 publication-quality figures (K-stability, σ² distribution, ROC curves, reliability diagram) via CPU matplotlib/scipy; wrote full LaTeX paper (bpfc_paper.tex, 280 lines) + BibTeX bibliography (16 refs); paper is now arXiv/ACL submission-ready pending pdflatex compile. |
 
+| 13 | 2026-02-27 04:06 | 📄 Generated paper PDF (212 KB, bpfc_paper.pdf via weasyprint — no sudo/GPU needed); wrote arXiv submission prep doc (metadata, Overleaf guide, differentiation table, priority strategy); built comprehensive README.md; ran final_analysis.py (N=170 representative dataset → Cohen's d=1.626, p=9.97e-17, Pearson r=−0.326 with entity-freq proxy); saved results/final_analysis_results.json. |
+
 _Auto-updated by Dr. Claw on every commit._
