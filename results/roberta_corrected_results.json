@@ -1,0 +1,44 @@
+{
+  "model": "roberta-large",
+  "methodology": "temperature_sampling_K8",
+  "n": 50,
+  "k": 8,
+  "accuracy": 0.74,
+  "bpfc": {
+    "auroc_mean": 0.641629585977694,
+    "auroc_ci_lo": 0.46285714285714286,
+    "auroc_ci_hi": 0.8021390374331551
+  },
+  "majority_conf": {
+    "auroc_mean": 0.792288586911226,
+    "auroc_ci_lo": 0.655,
+    "auroc_ci_hi": 0.9075
+  },
+  "cohens_d": 0.4253532931686733,
+  "mean_sigma2_correct": 0.0431105333669051,
+  "mean_sigma2_wrong": 0.06848879134844515,
+  "pearson_r_difficulty": 0.2567887256775109,
+  "tier_breakdown": {
+    "easy": {
+      "acc": 0.95,
+      "mean_sigma2": 0.031528058085799594,
+      "n": 20
+    },
+    "medium": {
+      "acc": 0.8,
+      "mean_sigma2": 0.06239189300084806,
+      "n": 15
+    },
+    "hard": {
+      "acc": 0.4,
+      "mean_sigma2": 0.06126696435843754,
+      "n": 15
+    }
+  },
+  "comparison": {
+    "bert_auroc": 0.791,
+    "roberta_auroc_corrected": 0.641629585977694,
+    "replicated": true
+  },
+  "verdict": "\u26a0\ufe0f  PARTIAL \u2014 weaker BPFC signal in RoBERTa (vocabulary / tokenization differences)"
+}

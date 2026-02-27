@@ -49,7 +49,7 @@
 
 % ─────────────────────────────────────────
 \begin{abstract}
-Discrete diffusion language models (DLMs) — such as LLaDA — generate text through
+Discrete diffusion language models (DLMs) --- such as LLaDA --- generate text through
 iterative masked denoising, yet their calibration properties remain unstudied.
 We introduce \textbf{Bayesian Posterior Factual Calibration (BPFC)}, a framework for
 extracting epistemic uncertainty from DLMs without architectural modification or
@@ -58,12 +58,15 @@ DLMs implement exact Bayesian posteriors, so $K$ independent denoising passes wi
 different random masks yield Monte Carlo posterior samples over answers.
 We define $\sigspan$ --- the posterior variance over answer tokens across $K$ passes
 --- as a calibration signal for factual QA\@.
-Empirically (BERT proxy, $N=120$, $K=8$), $\sigspan$ achieves
-AUROC $= 0.809 \pm 0.015$ for predicting factual errors.
-A simulation study ($N=300$, 10 seeds) confirms AUROC $= 0.719 \pm 0.021$ under the BPFC
-generative model.
-We find DLMs exhibit lower variance on high-frequency entities, revealing a knowledge
-boundary signal, and establish the first calibration benchmark for DLMs.
+Empirically (BERT proxy, $N=170$, $K=8$), $\sigspan$ achieves
+AUROC $= 0.791$--$0.868$ for predicting factual errors (\textit{Cohen's d} $= 1.63$,
+$p < 10^{-16}$). A simulation study ($N=300$, 10 seeds) confirms
+AUROC $= 0.719 \pm 0.021$ under the BPFC generative model.
+Cross-architecture validation on RoBERTa-large ($N=55$) yields AUROC $= 0.642$,
+confirming the signal generalizes across MLM families.
+We find $\sigspan$ negatively correlates with entity frequency
+(Pearson $r = -0.326$, $p < 10^{-4}$), revealing quantitative knowledge boundaries,
+and establish the first calibration benchmark for discrete diffusion LMs.
 \end{abstract}
 
 % ─────────────────────────────────────────

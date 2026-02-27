@@ -1,0 +1,37 @@
+{
+  "model": "roberta-large",
+  "n": 60,
+  "k": 8,
+  "accuracy": 0.23333333333333334,
+  "bpfc": {
+    "auroc_mean": 0.21261560279225783,
+    "auroc_ci_lo": 0.06832298136645963,
+    "auroc_ci_hi": 0.3877840909090909
+  },
+  "majority_conf": {
+    "auroc_mean": 0.768659227890002,
+    "auroc_ci_lo": 0.5773420479302832,
+    "auroc_ci_hi": 0.9407407407407408
+  },
+  "cohens_d": -1.022199161448292,
+  "pearson_r_difficulty": -0.2284907568321488,
+  "tier_breakdown": {
+    "easy": {
+      "acc": 0.25,
+      "mean_sigma2": 0.015029316159719341
+    },
+    "medium": {
+      "acc": 0.4,
+      "mean_sigma2": 0.012897088346006643
+    },
+    "hard": {
+      "acc": 0.05,
+      "mean_sigma2": 0.0037044336815869635
+    }
+  },
+  "bert_comparison": {
+    "bert_auroc": 0.791,
+    "roberta_auroc": 0.21261560279225783,
+    "replicated": false
+  }
+}
