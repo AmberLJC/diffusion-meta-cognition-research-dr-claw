@@ -24,4 +24,6 @@ Each entry = one commit. One or two sentence summary of what changed.
 
 ---
 
+| 10 | 2026-02-27 03:21 | 📊 Extended pilot (N=120, K=8) completed: AUROC=0.809±0.152, K-stability monotone (0.695→0.777), difficulty breakdown confirms accuracy gradient (71%→31%→23%); added §5.2b to paper with combined N=170 analysis (AUROC=0.791); updated Summary table with full empirical evidence matrix. |
+
 _Auto-updated by Dr. Claw on every commit._

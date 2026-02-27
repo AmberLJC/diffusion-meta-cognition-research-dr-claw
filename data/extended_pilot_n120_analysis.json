@@ -1,0 +1,107 @@
+{
+  "N": 120,
+  "K": 8,
+  "overall_acc": 0.4,
+  "auroc_sigma2": 0.809,
+  "auroc_sigma2_ci95": 0.1518,
+  "auroc_confidence": 0.8177,
+  "ece": 0.2,
+  "rho_sigma2_difficulty": 0.0939,
+  "rho_acc_difficulty": 0.3838,
+  "accuracy_by_tier": {
+    "easy": {
+      "n": 34,
+      "acc": 0.706,
+      "mean_sigma2": 0.42
+    },
+    "medium": {
+      "n": 55,
+      "acc": 0.309,
+      "mean_sigma2": 0.487
+    },
+    "hard": {
+      "n": 31,
+      "acc": 0.226,
+      "mean_sigma2": 0.508
+    }
+  },
+  "k_stability": {
+    "1": {
+      "mean": 0.6947,
+      "std": 0.0
+    },
+    "2": {
+      "mean": 0.7367,
+      "std": 0.0358
+    },
+    "3": {
+      "mean": 0.7546,
+      "std": 0.0304
+    },
+    "4": {
+      "mean": 0.7598,
+      "std": 0.0299
+    },
+    "6": {
+      "mean": 0.7697,
+      "std": 0.0237
+    },
+    "8": {
+      "mean": 0.7769,
+      "std": 0.0212
+    }
+  },
+  "ece_bins": [
+    {
+      "mean_conf": 0,
+      "acc": 0,
+      "n": 0
+    },
+    {
+      "mean_conf": 0.125,
+      "acc": 0.0,
+      "n": 1
+    },
+    {
+      "mean_conf": 0.25,
+      "acc": 0.05555555555555555,
+      "n": 18
+    },
+    {
+      "mean_conf": 0.375,
+      "acc": 0.125,
+      "n": 16
+    },
+    {
+      "mean_conf": 0,
+      "acc": 0,
+      "n": 0
+    },
+    {
+      "mean_conf": 0.5,
+      "acc": 0.35714285714285715,
+      "n": 28
+    },
+    {
+      "mean_conf": 0.625,
+      "acc": 0.5,
+      "n": 14
+    },
+    {
+      "mean_conf": 0.75,
+      "acc": 0.375,
+      "n": 8
+    },
+    {
+      "mean_conf": 0.875,
+      "acc": 0.631578947368421,
+      "n": 19
+    },
+    {
+      "mean_conf": 1.0,
+      "acc": 0.8125,
+      "n": 16
+    }
+  ],
+  "elapsed_total_s": 151.2
+}
