@@ -1,0 +1,66 @@
+{
+  "k_results": [
+    {
+      "k": 1,
+      "n": 100,
+      "accuracy": 0.26,
+      "auroc_sigma2_answer": 0.5
+    },
+    {
+      "k": 2,
+      "n": 100,
+      "accuracy": 0.28,
+      "auroc_sigma2_answer": 0.4236111111111111
+    },
+    {
+      "k": 3,
+      "n": 100,
+      "accuracy": 0.23,
+      "auroc_sigma2_answer": 0.4409937888198758
+    },
+    {
+      "k": 4,
+      "n": 100,
+      "accuracy": 0.27,
+      "auroc_sigma2_answer": 0.2960426179604262
+    },
+    {
+      "k": 6,
+      "n": 100,
+      "accuracy": 0.35,
+      "auroc_sigma2_answer": 0.14945054945054945
+    },
+    {
+      "k": 8,
+      "n": 100,
+      "accuracy": 0.31,
+      "auroc_sigma2_answer": 0.1531089294062646
+    },
+    {
+      "k": 12,
+      "n": 100,
+      "accuracy": 0.32,
+      "auroc_sigma2_answer": 0.19852941176470587
+    },
+    {
+      "k": 16,
+      "n": 100,
+      "accuracy": 0.35,
+      "auroc_sigma2_answer": 0.12043956043956044
+    }
+  ],
+  "config": {
+    "N_QUESTIONS": 100,
+    "K_VALUES": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      8,
+      12,
+      16
+    ],
+    "BERT_MODEL": "bert-base-uncased"
+  }
+}
