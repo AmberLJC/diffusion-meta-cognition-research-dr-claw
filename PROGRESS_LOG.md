@@ -17,6 +17,7 @@ Each entry = one commit. One or two sentence summary of what changed.
 | 5 | 2026-02-27 01:26 | 📊 Wrote Sections 5-7 (Results/Knowledge Boundaries/Conclusion, ~20k words total); built stats_analysis.py — pure-stdlib AUROC/ECE/Pearson/bootstrap/knowledge-decomp pipeline; dry-run validated (mock AUROC=0.91, ρ=0.84); confirmed Gradio ZeroGPU session-routing blocks raw HTTP (requires gradio_client WebSocket), documented workaround path. |
 
 | 6 | 2026-02-27 02:06 | 🎯 First real BPFC empirical results: installed PyTorch CPU, ran bert_cpu_pilot.py (N=50, K=8, 80s CPU) → AUROC(σ²_answer)=0.775; K-stability confirms convergence at K≥4; σ²_token failure in 1-step model validates Doyle theory; wrote full Results section with tables and neg. findings. |
+| 7 | 2026-02-27 02:21 | 📊 K-stability sweep (N=100, K∈{1,2,3,4,6,8,12,16}) experiment launched (k_stability_analysis.py); compiled complete 8-section paper into FULL_PAPER_DRAFT.md (951 lines, ~8,237 words); awaiting K-sweep results to update results section with larger-N validation. |
 
 ---
 
