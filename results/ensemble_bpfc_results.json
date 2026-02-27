@@ -1,0 +1,58 @@
+{
+  "experiment": "BPFC Ensemble: ALBERT-large + DistilBERT",
+  "date": "2026-02-27",
+  "session": "Dr. Claw #20",
+  "K": 8,
+  "N": 50,
+  "individual": {
+    "albert-large-v2": {
+      "label": "ALBERT-large-v2 (18M)",
+      "auroc": 0.7752192982456141,
+      "ci_lo": 0.5944055944055944,
+      "ci_hi": 0.921911421911422,
+      "cohens_d": 1.0869986081377325,
+      "accuracy": 0.24
+    },
+    "distilbert-base-uncased": {
+      "label": "DistilBERT-base (66M)",
+      "auroc": 0.8483455882352942,
+      "ci_lo": 0.6952380952380952,
+      "ci_hi": 0.9626485568760611,
+      "cohens_d": 1.5978619131980358,
+      "accuracy": 0.32
+    }
+  },
+  "ensemble_avg": {
+    "auroc": 0.7412280701754386,
+    "ci_lo": 0.5267857142857143,
+    "ci_hi": 0.92,
+    "cohens_d": 1.0580011337567328
+  },
+  "ensemble_rank": {
+    "auroc": 0.8070175438596491,
+    "ci_lo": 0.6260162601626016,
+    "ci_hi": 0.9485714285714286,
+    "cohens_d": 1.2573237117307012
+  },
+  "ensemble_max": {
+    "auroc": 0.7982456140350878,
+    "ci_lo": 0.6279761904761905,
+    "ci_hi": 0.94,
+    "cohens_d": 1.24778156742993
+  },
+  "best_ensemble": "RANK",
+  "per_tier_best": {
+    "easy": {
+      "auroc": 0.7291666666666666,
+      "accuracy": 0.4
+    },
+    "medium": {
+      "auroc": 0.5,
+      "accuracy": 0.13333333333333333
+    },
+    "hard": {
+      "auroc": 1.0,
+      "accuracy": 0.13333333333333333
+    }
+  }
+}
