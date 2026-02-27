@@ -1,0 +1,31 @@
+{
+  "n_questions": 15,
+  "k_passes": 8,
+  "dlm": {
+    "auroc": 0.5,
+    "ece": 0.5238095238095238,
+    "accuracy": 1.0,
+    "mean_sigma2": 0.7,
+    "mean_agreement": 0.3,
+    "api_error_rate": 0.0
+  },
+  "ar": {
+    "auroc": 0.5,
+    "ece": 0.5261904761904762,
+    "accuracy": 1.0,
+    "mean_sigma2": 0.6571428571428571,
+    "mean_agreement": 0.34285714285714286,
+    "api_error_rate": 0.0
+  },
+  "comparison": {
+    "dlm_vs_ar_auroc_delta": 0.0,
+    "spearman_rho_sigma2_correlation": 0.4166666666666666,
+    "hypothesis_H1_supported": false,
+    "hypothesis_H1_label": "\u03c3\u00b2_answer AUROC \u2265 0.65 (better than chance)"
+  },
+  "decision_gate": {
+    "auroc": 0.5,
+    "decision": "REASSESS",
+    "action": "Signal too weak. Fall back to CZEC (confusion zone entropy) direction."
+  }
+}
