@@ -1,0 +1,118 @@
+{
+  "session_date": "2026-02-27",
+  "spearman_params_vs_auroc": -0.3999999999999999,
+  "n_models": 5,
+  "all_models": [
+    {
+      "name": "albert-base-v2",
+      "params_M": 12,
+      "auroc": 0.6794019933554817,
+      "ci_lo": 0.4435215946843854,
+      "ci_hi": 0.9069767441860465,
+      "cohens_d": 0.8848741439584152,
+      "accuracy": 0.14,
+      "source": "this_session"
+    },
+    {
+      "name": "albert-large-v2",
+      "params_M": 18,
+      "auroc": 0.9463869463869464,
+      "ci_lo": 0.8811188811188811,
+      "ci_hi": 0.9941724941724942,
+      "cohens_d": 2.2051107625885584,
+      "accuracy": 0.22,
+      "source": "this_session"
+    },
+    {
+      "name": "distilbert-base-uncased",
+      "params_M": 66,
+      "auroc": 0.835,
+      "ci_lo": 0.704,
+      "ci_hi": 0.939,
+      "cohens_d": 1.221,
+      "source": "prior_session"
+    },
+    {
+      "name": "bert-base-uncased",
+      "params_M": 110,
+      "auroc": 0.791,
+      "ci_lo": 0.639,
+      "ci_hi": 0.927,
+      "cohens_d": 1.626,
+      "source": "prior_session"
+    },
+    {
+      "name": "roberta-large",
+      "params_M": 355,
+      "auroc": 0.642,
+      "ci_lo": 0.463,
+      "ci_hi": 0.802,
+      "cohens_d": 0.425,
+      "source": "prior_session"
+    }
+  ],
+  "new_results": {
+    "albert-base-v2": {
+      "model": "albert-base-v2",
+      "n": 50,
+      "k": 8,
+      "temperature": 1.0,
+      "accuracy": 0.14,
+      "elapsed_s": 10.3,
+      "auroc": 0.6794019933554817,
+      "auroc_ci_lo": 0.4435215946843854,
+      "auroc_ci_hi": 0.9069767441860465,
+      "cohens_d": 0.8848741439584152,
+      "mean_sigma2_correct": 0.6785714285714286,
+      "mean_sigma2_wrong": 0.9069767441860465,
+      "tier_breakdown": {
+        "easy": {
+          "n": 20,
+          "acc": 0.3,
+          "mean_sigma2": 0.8125
+        },
+        "medium": {
+          "n": 15,
+          "acc": 0.06666666666666667,
+          "mean_sigma2": 0.9583333333333334
+        },
+        "hard": {
+          "n": 15,
+          "acc": 0.0,
+          "mean_sigma2": 0.875
+        }
+      }
+    },
+    "albert-large-v2": {
+      "model": "albert-large-v2",
+      "n": 50,
+      "k": 8,
+      "temperature": 1.0,
+      "accuracy": 0.22,
+      "elapsed_s": 26.1,
+      "auroc": 0.9463869463869464,
+      "auroc_ci_lo": 0.8811188811188811,
+      "auroc_ci_hi": 0.9941724941724942,
+      "cohens_d": 2.2051107625885584,
+      "mean_sigma2_correct": 0.5227272727272727,
+      "mean_sigma2_wrong": 0.9358974358974359,
+      "tier_breakdown": {
+        "easy": {
+          "n": 20,
+          "acc": 0.4,
+          "mean_sigma2": 0.75
+        },
+        "medium": {
+          "n": 15,
+          "acc": 0.06666666666666667,
+          "mean_sigma2": 0.9166666666666666
+        },
+        "hard": {
+          "n": 15,
+          "acc": 0.13333333333333333,
+          "mean_sigma2": 0.9
+        }
+      }
+    }
+  }
+}
