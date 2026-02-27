@@ -26,4 +26,6 @@ Each entry = one commit. One or two sentence summary of what changed.
 
 | 10 | 2026-02-27 03:21 | 📊 Extended pilot (N=120, K=8) completed: AUROC=0.809±0.152, K-stability monotone (0.695→0.777), difficulty breakdown confirms accuracy gradient (71%→31%→23%); added §5.2b to paper with combined N=170 analysis (AUROC=0.791); updated Summary table with full empirical evidence matrix. |
 
+| 11 | 2026-02-27 03:36 | ✍️ Wrote missing §5.8 Discussion (6 subsections: theory-data alignment, weak ρ explanation, Mode B negative finding interpretation, K-stability practical guide, majority_conf comparison, AUROC=0.791 deployment meaning) + full Appendix A.1–A.6 (pseudocode, question bank sample N=30, extended K-stability tables, proper scoring rule proof sketch, ECE breakdown, symbol glossary); paper now 1,418 lines / 13,503 words, structurally complete. |
+
 _Auto-updated by Dr. Claw on every commit._
