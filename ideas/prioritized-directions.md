@@ -1,38 +1,86 @@
 # Prioritized Research Directions
-_Last updated: 2026-02-27 00:11 UTC_
+_Last updated: 2026-02-27 00:26 UTC | Run #2_
 
 ---
 
-## 🏆 #1 — Confusion-Zone Epistemic Calibration (CZEC)
+## 🏆 #1 — Bayesian Posterior Factual Calibration (BPFC)
+_Formerly "CZEC" — now theoretically grounded via Doyle (2025)_
 
-**Novelty score: 9.5/10** | **Feasibility: 8/10** | **Impact: 9/10**
+**Novelty score: 9.8/10** | **Feasibility: 8.5/10** | **Impact: 9.5/10**
 
-### The Claim
-The geometry of "confusion zones" (entropy spikes during diffusion LLM denoising) encodes epistemic uncertainty and can serve as a zero-shot calibration signal — i.e., a proxy for whether the model *knows* the answer or is hallucinating.
+### The Upgrade
 
-### Why Novel
-- Confusion zones were discovered by Chen et al. (Nov 2025) but only studied in the context of RL training efficiency (ATPO)
-- Nobody has asked: does confusion zone geometry correlate with **factual knowledge**?
-- TDGNet uses temporal attention for hallucination detection — different signal, different method
-- DLM-Scope provides SAE features that could be probed at confusion zone timesteps — unexplored intersection
-- All AR calibration methods (semantic entropy, P(IK), conformal prediction) have zero DLM equivalents
+Run #1 proposed CZEC (Confusion-Zone Epistemic Calibration) — an empirical approach.
+Run #2 discovered **arXiv:2507.07586** (Doyle, Jul 2025), which **proves** that absorbing
+discrete diffusion LMs implement the exact Bayesian posterior. Per-token variance from K
+independent denoising passes has Spearman ρ = 0.996 with reconstruction error.
 
-### Formal Research Question
-> Can we extract a calibrated epistemic uncertainty signal from the denoising trajectory of a masked diffusion LM, using confusion zone features (entropy curve shape, RoEC peaks, CM trajectory), without any additional training?
+This transforms our direction: instead of *hoping* that confusion zones encode knowledge,
+we now have a *theorem* that says variance = calibrated uncertainty. We're building the
+first application of this theorem to factual QA and knowledge boundaries.
 
-### Proposed Experiments
-1. **Pilot (1 week)**: Run LLaDA-8B on TriviaQA; extract trajectory confusion features; correlate with correctness (AUROC)
-2. **Knowledge stratification (2 weeks)**: Segment by entity popularity; test hypothesis that "unknown" facts → higher confusion mass
-3. **SAE + Confusion joint signal (3 weeks)**: Use DLM-Scope SAEs at confusion zone steps to identify knowledge boundary circuits
+### The Core Research Question
+> Does the per-token Bayesian posterior variance (K denoising passes, masked diffusion LM)
+> constitute a calibrated epistemic signal for factual recall — and does it differentiate
+> known from hallucinated facts with superior calibration to AR semantic entropy?
 
-### Key Baselines
-- Token-level confidence (Search-or-Accelerate style)
-- TDGNet (attention-graph hallucination detection)
-- AR semantic entropy (Kuhn et al.)
-- Verbalized uncertainty from LLaDA vs GPT-4o
+### Why Novel (Post-Run #2)
+1. Doyle (2025) only validated on WikiText-2 perplexity — NO factual QA application
+2. Nobody has connected posterior variance → knowledge boundaries
+3. Nobody has compared DLM posterior variance to AR semantic entropy (Kuhn et al.)
+4. Nobody has built a DLM abstention/selective-generation system from posterior variance
+5. Energy of Falsehood (Feb 2026) uses EXTERNAL reconstruction stress test — we use INTERNAL generation trajectory → fundamentally different, complementary, more practically useful
+6. "Diffusion uncertainty quantification factual" → 0 results on arXiv
 
-### Expected Contribution
-A new calibration paradigm for DLMs that exploits temporal trajectory dynamics — fundamentally impossible for AR models. First paper connecting confusion zones to epistemics.
+### Formal Research Hypotheses
+- **H1**: σ²_total (posterior variance over answer span) predicts factual correctness AUROC ≥ 0.75
+- **H2**: σ²_total monotonically decreases with entity frequency (knowledge boundary signal)
+- **H3**: K=8 passes achieves >90% of the AUROC of K=64 (compute-efficient operating point)
+- **H4**: DLM posterior variance ECE ≤ AR semantic entropy ECE (better calibrated)
+- **H5**: σ²_total and confusion_mass (CZEC feature) have r ≥ 0.65 (same phenomenon, two views)
+
+### Experimental Design
+
+```
+Phase 1 — Posterior Variance Extraction (Doyle's MC estimator):
+  K ∈ {4, 8, 16, 32, 64} independent masked denoising passes
+  σ²_i = Var_k[argmax P_k(x_i)] per token position
+  σ²_span = mean(σ²_i) over answer span positions
+  Model: LLaDA-8B-Instruct (HuggingFace: GSAI-ML/LLaDA-8B-Instruct)
+  Dataset: TriviaQA (500 dev questions), PopQA (stratified by entity freq)
+
+Phase 2 — Confusion Zone Features (complementary):
+  Single-pass entropy trajectory H(t), RoEC, CM
+  Extract: confusion_mass, confusion_count, peak_RoEC
+  Correlate with σ²_span
+
+Phase 3 — Calibration Analysis:
+  AUROC: σ²_span → factual correctness (EM)
+  ECE curves: bucket by σ²_span, measure accuracy within bucket
+  Compare: LLaMA-8B semantic entropy (5 samples/question), verbalized confidence
+
+Phase 4 — Knowledge Boundary:
+  PopQA grouped by log10(entity_freq): 1–2 (rare) → 4–5 (common)
+  Hypothesis: σ²_span ~ 1/log(entity_freq)
+```
+
+### Expected Contributions
+1. First practical calibration system for DLMs grounded in Bayesian posterior theory
+2. First comparison of DLM vs AR uncertainty quantification on factual QA
+3. A new meta-cognitive capability: DLMs saying "I don't know" from internal signals only
+4. Connection between Doyle's theoretical MC estimator and Chen et al.'s confusion zones
+5. A compute-efficiency analysis (K=8 vs K=64) for practical deployment
+
+### Key Differentiators from Related Papers
+| Feature | BPFC (ours) | Energy of Falsehood | TDGNet | CZEC (original) |
+|---|---|---|---|---|
+| Theoretical grounding | ✅ Doyle 2025 | ❌ | ❌ | ❌ |
+| Internal (no extra components) | ✅ | ❌ NLI critic | ✅ | ✅ |
+| During generation | ✅ | ❌ post-hoc | ❌ post-hoc | ✅ |
+| Factual QA focus | ✅ | ✅ | ✅ | ✅ |
+| Knowledge boundaries | ✅ | ❌ | ❌ | ✅ |
+| AR comparison | ✅ | ❌ | ❌ | ✅ |
+| Compute-efficiency analysis | ✅ | ❌ | ❌ | ❌ |
 
 ---
 
@@ -40,87 +88,82 @@ A new calibration paradigm for DLMs that exploits temporal trajectory dynamics �
 
 **Novelty score: 8/10** | **Feasibility: 8.5/10** | **Impact: 8/10**
 
-### The Claim
-Diffusion LMs can be made to "self-verify" their own factuality mid-trajectory, not just at the end (as in Prism). This mid-trajectory self-verification is a richer form of meta-cognition than AR equivalents because it allows *revision* of already-placed tokens.
+DLMs can revise already-unmasked tokens (unique ability — AR models cannot). This creates a
+"revision loop" that constitutes a richer form of meta-cognition.
 
-### Why Novel
-- Prism (Feb 2026) uses self-verification for decoding search — not studied as a meta-cognitive phenomenon
-- AR self-verification papers exist (self-consistency, etc.) but can't revise past tokens
-- DLMs' ability to un-mask tokens gives a unique "revision loop" — completely unexplored for meta-cognition
+Prism (Feb 2026) uses self-verification for hierarchical search decoding, but never studies
+it as a meta-cognitive phenomenon or compares to AR's inability to revise.
 
-### Proposed Experiments
-1. **Intervention study**: At step t_mid, inject factual errors; does the DLM self-correct?
-2. **Measure self-correction rates** as a function of: (a) error salience, (b) step position, (c) entity frequency
-3. **Compare to AR**: GPT can't revise committed tokens — DLMs may have fundamentally superior correction ability
+**Experiment**: Mid-trajectory intervention study — inject factual errors at t_mid, measure:
+- Self-correction rate as a function of: error salience, step position, entity frequency
+- Whether correction depends on posterior variance (high σ² positions → more likely corrected)
 
 ---
 
-## #3 — Knowledge Boundary Circuits in DLMs via Probing
+## #3 — Knowledge Boundary Circuits via Posterior Variance + SAE Probing
 
-**Novelty score: 8.5/10** | **Feasibility: 7/10** | **Impact: 8.5/10**
+**Novelty score: 9/10** | **Feasibility: 7/10** | **Impact: 9/10**
 
-### The Claim
-There exist specific circuits (attention head patterns or SAE feature activations) in DLMs that reliably activate when the model encounters knowledge boundaries — i.e., regions where factual recall fails. These circuits are detectable and different from what AR LLMs develop.
+**New synthesis** (from Run #2): Use per-position posterior variance σ²_i as a mechanistic
+probe — positions with high variance are drawing on stored knowledge. Connect to DLM-Scope
+SAE features at those positions.
 
-### Why Novel
-- DLM-Scope (Feb 2026) found that SAE features are interpretable and stable in DLMs
-- DLM-Scope shows SAEs useful for decoding order — nobody has extended to knowledge/factuality
-- AR mechanistic interpretability has studied "knowledge storage" in MLP layers (Meng et al., ROME) — DLM equivalent is completely unexplored
-- In DLMs, knowledge queries happen in bidirectional context, not causal — storage circuits may be fundamentally different
+This is the DLM equivalent of ROME/MEMIT for AR models but uses posterior variance
+(not causal intervention) to localize factual storage.
 
-### Proposed Experiments
-1. **Probe DLM-Scope SAE features** for factual vs counterfactual inputs
-2. **Circuit tracing**: Which attention heads activate on "entity → attribute" queries in DLMs?
-3. **Compare**: AR ROME-style localization vs DLM-style — where is knowledge stored?
+**Why novel**: ROME needs causal traces (left-to-right). DLMs are bidirectional — posterior
+variance provides an alternative localization signal that exploits global context.
 
----
-
-## #4 — Epistemic Tokens in Masked Diffusion: Emergence of "Uncertainty Flags"
-
-**Novelty score: 7.5/10** | **Feasibility: 7/10** | **Impact: 7.5/10**
-
-### The Claim
-In masked diffusion LMs, certain token positions may develop a functional role as "epistemic anchors" — positions that remain uncertain (masked or low-confidence) longer than others and whose resolution sequence encodes the model's implicit confidence ordering.
-
-### Why Novel
-- MAGE (Feb 2026) shows that all-mask attention already "knows where to look" — but doesn't ask *why* certain positions resist early unmasking
-- The "decoding order" in DLMs is a learned strategy — could encode implicit confidence
-- No paper has studied whether decoding order correlates with epistemic uncertainty
-
-### Proposed Experiments
-1. **Track unmasking order** for factually known vs unknown questions
-2. **Hypothesis**: Answer tokens unmask later (and in more confused manner) for hallucinated answers
-3. **Correlate**: DLM-Scope decoding order signals with factual accuracy
+**Experiment**: For each (entity, attribute) factual pair:
+1. Compute σ²_i across all positions during factual recall
+2. Identify peak-σ² positions → are these the "attribute" positions?
+3. Probe DLM-Scope SAEs at peak-σ² positions for factual vs. counterfactual inputs
+4. Hypothesis: peak-σ² positions activate specific "factual query" SAE features
 
 ---
 
-## #5 — Bidirectional Uncertainty vs Causal Uncertainty: Direct Architecture Comparison
+## #4 — Epistemic Decoding Order: Last-Unmasked = Least Certain
+
+**Novelty score: 7.5/10** | **Feasibility: 8/10** | **Impact: 7.5/10**
+
+The decoding ORDER in masked diffusion LMs (which position unmasks first) is a learned
+strategy. MAGE (Feb 2026) shows all-mask attention encodes "where to look" proto-planning.
+
+**Hypothesis**: Answer tokens for KNOWN facts unmask early and cleanly. Answer tokens for
+HALLUCINATED outputs unmask late and hesitantly (multiple mask/unmask cycles).
+
+**Simple experiment**: Track unmasking order + flip frequency per position on TriviaQA.
+Correlate late-resolution / high-flip positions with factual incorrectness.
+
+---
+
+## #5 — Bidirectional vs Causal Uncertainty Architecture Comparison
 
 **Novelty score: 7/10** | **Feasibility: 9/10** | **Impact: 8/10**
 
-### The Claim
-Diffusion LMs, by virtue of bidirectional context from step 0, develop fundamentally different uncertainty representations than AR models. This is measurable via probing tasks, calibration curves, and semantic entropy comparisons.
+Side-by-side calibration curve comparison: LLaDA-8B vs LLaMA-8B on TriviaQA.
+Semantic entropy (5 samples), verbalized confidence, posterior variance, ECE.
 
-### Proposed Experiments
-1. **Side-by-side calibration curves**: LLaDA-8B vs LLaMA-8B on TriviaQA
-2. **Semantic entropy** (Kuhn-style): sample 10 answers from each, cluster, compare calibration
-3. **Verbalized confidence**: Do diffusion models express calibrated verbal uncertainty?
+This is the clearest "macro" paper establishing that DLMs have different (and potentially
+better) uncertainty representations than AR models.
 
 ---
 
-## Previously Considered Directions (Downgraded)
+## Removed / Deprioritized
 
-| Direction | Status | Reason Downgraded |
+| Direction | Status | Reason |
 |---|---|---|
-| Meta-Learning Transfer (MAML for DLMs) | Low priority | Hard, little infrastructure, indirect relevance |
-| Planning vs Reactive Generation | Moderate | Now partially covered by MAGE and block diffusion papers |
+| Pure CZEC (entropy-only confusion zones) | Merged into #1 | Posterior variance is more rigorous |
+| Meta-Learning Transfer (MAML for DLMs) | Dropped | Off-topic, low feasibility |
+| Planning vs Reactive Generation | Low priority | Covered by MAGE |
 
 ---
 
-## Next Research Steps
+## Immediate Actions
 
-- [ ] Get LLaDA-8B weights and run pilot confusion-zone extraction on TriviaQA (100 questions)
-- [ ] Read DLM-Scope paper PDF in detail for SAE architecture specifics
-- [ ] Read TDGNet paper PDF for implementation details
-- [ ] Set up trajectory logging code for LLaDA inference
-- [ ] Write code to extract: entropy per step, RoEC, CM per position
+- [ ] Read Doyle (2507.07586) full PDF — understand exact assumptions for the Bayesian posterior proof
+- [ ] Read Energy of Falsehood paper PDF — confirm our differentiation is accurate
+- [ ] Set up LLaDA-8B inference with K-pass trajectory extraction
+- [ ] Pilot: 100 TriviaQA questions, K=8, measure σ²_span vs correctness (AUROC)
+- [ ] Write differentiation memo: BPFC vs Energy of Falsehood vs TDGNet
+- [ ] Begin literature review section of draft paper
