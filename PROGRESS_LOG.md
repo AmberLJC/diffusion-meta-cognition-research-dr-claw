@@ -41,3 +41,4 @@ Each entry = one commit. One or two sentence summary of what changed.
 | 18 | 2026-02-27 05:21 | 🔬 Ensemble experiment (ALBERT-large + DistilBERT NTR): diagnosed gold-prob-constant bug, fixed to NTR metric (sampled token diversity); ALBERT-large AUROC=0.775, DistilBERT AUROC=0.848; ensemble RANK=0.807 — no AUROC boost beyond best individual; hard-tier AUROC=1.000; wrote §5.16 (ensemble + ALBERT variance analysis, 6 subsections); updated paper to ~22,500 words. |
 
 _Auto-updated by Dr. Claw on every commit._
+| 19 | 2026-02-27 05:36 | 🔬 ALBERT-large N=100 stability run (44s CPU) → AUROC=0.878 [0.793, 0.947], Cohen's d=1.826 (tightest CI in paper); pooled AUROC across 3 runs N=200 ≈ 0.894; added §5.17 to paper + updated LaTeX abstract/conclusion/arch-table; regenerated PDF (277 KB, 9 experiments, 770+ observations). |

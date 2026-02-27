@@ -1,0 +1,817 @@
+{
+  "experiment": "albert_n100_stable",
+  "model": "albert-large-v2",
+  "n": 100,
+  "k": 8,
+  "temperature": 1.0,
+  "auroc": 0.8777270421106037,
+  "ci_lo": 0.7930133333333333,
+  "ci_hi": 0.9471342982030112,
+  "cohens_d": 1.826130644831085,
+  "accuracy": 0.27,
+  "runtime_s": 43.935638427734375,
+  "pooled_auroc_with_session17": 0.9004846947404025,
+  "pooled_n": 150,
+  "results": [
+    {
+      "template": "The mathematician who created set theory is Georg [MASK].",
+      "gold": "cantor",
+      "pred": "riemann",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "Isaac Newton discovered the law of [MASK].",
+      "gold": "gravity",
+      "pred": "relativity",
+      "ntr": 0.375,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "Photosynthesis converts CO2 and water into glucose and [MASK].",
+      "gold": "oxygen",
+      "pred": "sodium",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The capital of Canada is [MASK].",
+      "gold": "ottawa",
+      "pred": "ottawa",
+      "ntr": 0.75,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The Amazon River flows through [MASK].",
+      "gold": "brazil",
+      "pred": "belize",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The currency of Switzerland is the Swiss [MASK].",
+      "gold": "franc",
+      "pred": "sum",
+      "ntr": 0.625,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The mathematician who developed non-Euclidean geometry is [MASK].",
+      "gold": "riemann",
+      "pred": "natural",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The composer of 'The Four Seasons' is Antonio [MASK].",
+      "gold": "vivaldi",
+      "pred": "garcia",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The first antiparticle discovered was the [MASK].",
+      "gold": "positron",
+      "pred": "magnet",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The Battle of Hastings was in [MASK].",
+      "gold": "1066",
+      "pred": "1943",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The French Revolution began in [MASK].",
+      "gold": "1789",
+      "pred": "1815",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The 1969 Moon landing mission was called Apollo [MASK].",
+      "gold": "11",
+      "pred": "60",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The composer of 'Tristan und Isolde' is Richard [MASK].",
+      "gold": "wagner",
+      "pred": "strauss",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The author of 'War and Peace' is Leo [MASK].",
+      "gold": "tolstoy",
+      "pred": "side",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The capital of Tajikistan is [MASK].",
+      "gold": "dushanbe",
+      "pred": "tajikistan",
+      "ntr": 0.625,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The capital of Japan is [MASK].",
+      "gold": "tokyo",
+      "pred": "tokyo",
+      "ntr": 0.625,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The painter of 'The Ambassadors' (1533) is Hans [MASK].",
+      "gold": "holbein",
+      "pred": "hahn",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The isotope used in MRI scanners is hydrogen-[MASK].",
+      "gold": "1",
+      "pred": "297",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The speed of light is approximately 300,000 km per [MASK].",
+      "gold": "second",
+      "pred": "hour",
+      "ntr": 0.375,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The chemical symbol for iron is [MASK].",
+      "gold": "fe",
+      "pred": "dan",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "Gravity was described by Isaac [MASK].",
+      "gold": "newton",
+      "pred": "fisher",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "Albert Einstein developed the theory of [MASK].",
+      "gold": "relativity",
+      "pred": "relativity",
+      "ntr": 0.5,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The mathematician who proved Fermat's Last Theorem is Andrew [MASK].",
+      "gold": "wiles",
+      "pred": "sharon",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The smallest continent is [MASK].",
+      "gold": "australia",
+      "pred": "antarctica",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The author of 'The Trial' is Franz [MASK].",
+      "gold": "kafka",
+      "pred": "kaufman",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The capital of India is New [MASK].",
+      "gold": "delhi",
+      "pred": "delhi",
+      "ntr": 0.125,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The philosopher of the categorical imperative is Immanuel [MASK].",
+      "gold": "kant",
+      "pred": "kant",
+      "ntr": 0.625,
+      "correct": 1,
+      "tier": "hard"
+    },
+    {
+      "template": "The Pythagorean theorem: a\u00b2 + b\u00b2 = [MASK].",
+      "gold": "c\u00b2",
+      "pred": "tex",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The largest moon of Neptune is [MASK].",
+      "gold": "triton",
+      "pred": "luna",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The primary language of Brazil is [MASK].",
+      "gold": "portuguese",
+      "pred": "portuguese",
+      "ntr": 0.5,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The tallest mountain on Earth is [MASK].",
+      "gold": "everest",
+      "pred": "moses",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The Battle of Waterloo was in [MASK].",
+      "gold": "1815",
+      "pred": "russia",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The year the Berlin Wall fell was [MASK].",
+      "gold": "1989",
+      "pred": "1933",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The capital of South Africa is [MASK].",
+      "gold": "pretoria",
+      "pred": "pretoria",
+      "ntr": 0.375,
+      "correct": 1,
+      "tier": "medium"
+    },
+    {
+      "template": "The human body has [MASK] bones.",
+      "gold": "206",
+      "pred": "6",
+      "ntr": 1.0,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The capital of Russia is [MASK].",
+      "gold": "moscow",
+      "pred": "moscow",
+      "ntr": 0.125,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The atomic number of carbon is [MASK].",
+      "gold": "6",
+      "pred": "comprised",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The chemical formula for water is [MASK].",
+      "gold": "h2o",
+      "pred": "where",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The capital of Germany is [MASK].",
+      "gold": "berlin",
+      "pred": "berlin",
+      "ntr": 0.75,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "William Shakespeare wrote the play [MASK].",
+      "gold": "hamlet",
+      "pred": "shakespeare",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The smallest planet in the solar system is [MASK].",
+      "gold": "mercury",
+      "pred": "saturn",
+      "ntr": 0.625,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The author of 'The Tin Drum' is G\u00fcnter [MASK].",
+      "gold": "grass",
+      "pred": "kruger",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The composer of 'Winterreise' is Franz [MASK].",
+      "gold": "schubert",
+      "pred": "liszt",
+      "ntr": 0.25,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The element with atomic symbol Na is [MASK].",
+      "gold": "sodium",
+      "pred": "encoded",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "Shakespeare was born in [MASK].",
+      "gold": "stratford",
+      "pred": "russia",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The Treaty of [MASK] ended the Crimean War.",
+      "gold": "paris",
+      "pred": "ghent",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The treaty ending World War I was signed at [MASK].",
+      "gold": "versailles",
+      "pred": "versailles",
+      "ntr": 0.875,
+      "correct": 1,
+      "tier": "medium"
+    },
+    {
+      "template": "The philosopher who wrote 'Being and Time' is Martin [MASK].",
+      "gold": "heidegger",
+      "pred": "luther",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The largest ocean on Earth is the [MASK] Ocean.",
+      "gold": "pacific",
+      "pred": "pacific",
+      "ntr": 0.5,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The half-life of Carbon-14 is approximately [MASK] years.",
+      "gold": "5730",
+      "pred": "45",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The planet closest to the Sun is [MASK].",
+      "gold": "mercury",
+      "pred": "pluto",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The first antibiotic discovered was [MASK].",
+      "gold": "penicillin",
+      "pred": "basil",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The capital of Egypt is [MASK].",
+      "gold": "cairo",
+      "pred": "cairo",
+      "ntr": 0.125,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The Great Wall was built in [MASK].",
+      "gold": "china",
+      "pred": "1893",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The capital of the UK is [MASK].",
+      "gold": "london",
+      "pred": "london",
+      "ntr": 0.875,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The philosopher who wrote 'Thus Spoke Zarathustra' is Friedrich [MASK].",
+      "gold": "nietzsche",
+      "pred": "nietzsche",
+      "ntr": 0.25,
+      "correct": 1,
+      "tier": "hard"
+    },
+    {
+      "template": "The first programmable electronic computer was called [MASK].",
+      "gold": "eniac",
+      "pred": "ibm",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The capital of Brazil is [MASK].",
+      "gold": "brasilia",
+      "pred": "rio",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The Declaration of Independence was signed in [MASK].",
+      "gold": "1776",
+      "pred": "1846",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The capital of Australia is [MASK].",
+      "gold": "canberra",
+      "pred": "canberra",
+      "ntr": 0.625,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The country that uses the lempira as currency is [MASK].",
+      "gold": "honduras",
+      "pred": "indonesia",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The capital of France is [MASK].",
+      "gold": "paris",
+      "pred": "paris",
+      "ntr": 0.25,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The sun rises in the [MASK].",
+      "gold": "east",
+      "pred": "piazza",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The periodic table element Au represents [MASK].",
+      "gold": "gold",
+      "pred": "isn",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The currency of Japan is the [MASK].",
+      "gold": "yen",
+      "pred": "dollar",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The economist who wrote 'The General Theory' is John Maynard [MASK].",
+      "gold": "keynes",
+      "pred": "keynes",
+      "ntr": 0.125,
+      "correct": 1,
+      "tier": "hard"
+    },
+    {
+      "template": "The author of 'Don Quixote' is Miguel de [MASK].",
+      "gold": "cervantes",
+      "pred": "spain",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The human genome has approximately [MASK] billion base pairs.",
+      "gold": "3",
+      "pred": "ninety",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The Battle of [MASK] was the turning point of WWI on the Eastern Front.",
+      "gold": "tannenberg",
+      "pred": "waterloo",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The physicist who formulated wave mechanics is Erwin [MASK].",
+      "gold": "schrodinger",
+      "pred": "erwin",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The capital of Italy is [MASK].",
+      "gold": "rome",
+      "pred": "trieste",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "DNA stands for deoxyribonucleic [MASK].",
+      "gold": "acid",
+      "pred": "acid",
+      "ntr": 0.375,
+      "correct": 1,
+      "tier": "medium"
+    },
+    {
+      "template": "The supernova remnant from 1054 AD is the [MASK] Nebula.",
+      "gold": "crab",
+      "pred": "cambrian",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "Julius Caesar was assassinated in [MASK] BC.",
+      "gold": "44",
+      "pred": "63",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "Beethoven composed his [MASK] Symphony when deaf.",
+      "gold": "ninth",
+      "pred": "first",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The capital of Burkina Faso is [MASK].",
+      "gold": "ouagadougou",
+      "pred": "benin",
+      "ntr": 0.25,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The element with atomic number 77 is [MASK].",
+      "gold": "iridium",
+      "pred": "labelled",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The author of 'Crime and Punishment' is [MASK].",
+      "gold": "dostoevsky",
+      "pred": "wayne",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The capital of China is [MASK].",
+      "gold": "beijing",
+      "pred": "beijing",
+      "ntr": 0.625,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The author of 'The Sound and the Fury' is William [MASK].",
+      "gold": "faulkner",
+      "pred": "charlton",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The Meiji Restoration occurred in [MASK].",
+      "gold": "1868",
+      "pred": "1927",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The composer of Symphony No. 40 is Wolfgang Amadeus [MASK].",
+      "gold": "mozart",
+      "pred": "mozart",
+      "ntr": 0.125,
+      "correct": 1,
+      "tier": "medium"
+    },
+    {
+      "template": "The capital of Eritrea is [MASK].",
+      "gold": "asmara",
+      "pred": "eritrea",
+      "ntr": 0.125,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The author of 'The Divine Comedy' is Dante [MASK].",
+      "gold": "alighieri",
+      "pred": "percy",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The chemist who discovered radioactivity is Henri [MASK].",
+      "gold": "becquerel",
+      "pred": "ghent",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The Ottoman sultan who conquered Constantinople was [MASK] II.",
+      "gold": "mehmed",
+      "pred": "mehmed",
+      "ntr": 0.375,
+      "correct": 1,
+      "tier": "hard"
+    },
+    {
+      "template": "The chemical formula for table salt is [MASK].",
+      "gold": "nacl",
+      "pred": "\u20ac",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The capital of Kyrgyzstan is [MASK].",
+      "gold": "bishkek",
+      "pred": "minsk",
+      "ntr": 0.5,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "Archimedes' principle relates to buoyancy of objects in [MASK].",
+      "gold": "fluid",
+      "pred": "space",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The longest-reigning British monarch was Queen [MASK].",
+      "gold": "victoria",
+      "pred": "victoria",
+      "ntr": 0.375,
+      "correct": 1,
+      "tier": "medium"
+    },
+    {
+      "template": "Da Vinci painted the [MASK] Lisa.",
+      "gold": "mona",
+      "pred": "mona",
+      "ntr": 0.125,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The chemical symbol for gold is [MASK].",
+      "gold": "au",
+      "pred": "mo",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The capital of Spain is [MASK].",
+      "gold": "madrid",
+      "pred": "madrid",
+      "ntr": 0.375,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The boiling point of water is [MASK] degrees Celsius.",
+      "gold": "100",
+      "pred": "zero",
+      "ntr": 1.0,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The first US President was George [MASK].",
+      "gold": "washington",
+      "pred": "washington",
+      "ntr": 0.5,
+      "correct": 1,
+      "tier": "easy"
+    },
+    {
+      "template": "The Eiffel Tower is located in [MASK].",
+      "gold": "paris",
+      "pred": "monaco",
+      "ntr": 0.875,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The capital of Kazakhstan is [MASK].",
+      "gold": "astana",
+      "pred": "alma",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "hard"
+    },
+    {
+      "template": "The Nile River is the longest river in [MASK].",
+      "gold": "africa",
+      "pred": "egypt",
+      "ntr": 0.25,
+      "correct": 0,
+      "tier": "easy"
+    },
+    {
+      "template": "The speed of sound at sea level is approximately [MASK] m/s.",
+      "gold": "343",
+      "pred": "20",
+      "ntr": 0.75,
+      "correct": 0,
+      "tier": "medium"
+    },
+    {
+      "template": "The capital of Argentina is Buenos [MASK].",
+      "gold": "aires",
+      "pred": "aires",
+      "ntr": 0.125,
+      "correct": 1,
+      "tier": "medium"
+    }
+  ]
+}
