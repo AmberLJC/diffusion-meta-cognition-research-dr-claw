@@ -1,0 +1,65 @@
+{
+  "N": 50,
+  "accuracy": 0.78,
+  "n_correct": 39,
+  "n_incorrect": 11,
+  "mode_a": {
+    "auroc": 0.9090909090909091,
+    "auroc_ci_95": [
+      0.8111034121704853,
+      0.9800348837209303
+    ],
+    "ece": 0.3857142857142858,
+    "sigma2_stats": {
+      "mean": 0.6057142857142858,
+      "std": 0.3410331706597064,
+      "median": 0.7678571428571428,
+      "min": 0.0,
+      "max": 0.9642857142857143,
+      "p25": 0.3035714285714286,
+      "p75": 0.8928571428571429
+    }
+  },
+  "mode_b": {
+    "available": true,
+    "auroc": 0.7435897435897436,
+    "ece": 0.206161886966268,
+    "sigma2_stats": {
+      "mean": 0.02137873068079185,
+      "std": 0.013052932945389934,
+      "median": 0.02321022361985943,
+      "min": 0.0028588264694919233,
+      "max": 0.048246260921072835,
+      "p25": 0.006609015949010465,
+      "p75": 0.029107694626355405
+    }
+  },
+  "knowledge_decomposition": {
+    "threshold": 0.7678571428571428,
+    "counts": {
+      "known": 25,
+      "lucky_guess": 14,
+      "confident_mistake": 0,
+      "unknown": 11
+    },
+    "fractions": {
+      "known": 0.5,
+      "lucky_guess": 0.28,
+      "confident_mistake": 0.0,
+      "unknown": 0.22
+    },
+    "N": 50,
+    "lucky_guess_rate": 0.28,
+    "confident_mistake_rate": 0.0,
+    "known_fraction": 0.5,
+    "unknown_fraction": 0.22
+  },
+  "entity_frequency_correlation": {
+    "pearson_r": 0.8425201699646755,
+    "spearman_r": 0.8236328155699807,
+    "n_with_freq": 50
+  },
+  "h1_supported": true,
+  "h2_supported": false,
+  "h3_supported": true
+}

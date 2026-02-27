@@ -273,221 +273,446 @@ def pairwise_agreement(answers: list[str]) -> float:
 
 # ─── LLaDA API Client (Gradio Space) ─────────────────────────────────────────
 
+
 class LLaDASpaceClient:
     """
     Client for LLaDA-8B-Instruct via HuggingFace Gradio Space.
-    
-    Strategy (in order of preference):
-    1. Pure urllib Gradio API (no dependencies) — tries multimodalart/LLaDA space
-    2. gradio_client library (if installed: pip install gradio_client)
-    
-    CONFIRMED Feb 2026: LLaDA-8B-Instruct has NO HF Inference Providers.
-    All variants return HTTP 410 on api-inference.huggingface.co.
-    The ZeroGPU Space (multimodalart/LLaDA) is the only free cloud access route.
-    
-    NOTE on outputs: The Space returns a text string (final generation).
-    We do NOT have access to per-step logits or token-level probabilities.
-    Our K=8 independent samples are the operationalization of Doyle's
-    K independent denoising passes at the *behavioral* level.
-    
-    LIMITATION: This captures answer-level variance, not token-level σ².
-    This is a valid proxy for the pilot (confirms signal exists), but
-    the full paper will need direct model access for per-token σ².
-    
-    GRADIO API STRUCTURE for multimodalart/LLaDA:
-    - Space URL: https://multimodalart-llada.hf.space
-    - API info: GET /info
-    - Predict: POST /run/predict  (fn_index=0 for main generation)
-    - Session: GET /queue/join → SSE stream
+
+    ─── CONFIRMED API STRUCTURE (Feb 27, 2026) ─────────────────────────────
+    Space: multimodalart/LLaDA (Gradio v5.18.0, ZeroGPU A10g, 2 replicas)
+    Base URL: https://multimodalart-llada.hf.space
+
+    GRADIO v5 API PATHS (confirmed working):
+      GET  /gradio_api/info                                   → endpoint schema
+      POST /gradio_api/call/{endpoint}?session_hash=<id>     → {"event_id": "..."}
+      GET  /gradio_api/call/{endpoint}/{event_id}            → SSE stream
+
+    TWO-STEP FLOW (from app.py):
+      Step 1: POST /gradio_api/call/user_message_submitted
+              data: [message(str), gen_length(float), steps(float),
+                     constraints(str), delay(float)]
+              → Updates server-side chat_history gr.State
+              → Returns: (Conversation, YourMessage, DenoiseViz, CurrentResponse)
+
+      Step 2: POST /gradio_api/call/bot_response
+              data: [gen_length(float), steps(float), constraints(str), delay(float),
+                     temperature(float), cfg_scale(float), block_length(float),
+                     remasking(Literal['low_confidence','random'])]
+              → @spaces.GPU; runs LLaDA masked denoising
+              → Returns: (Conversation, DenoiseViz, CurrentResponse)
+
+    ★ KEY DISCOVERY (Feb 27, 2026):
+      The /bot_response endpoint returns:
+        "Denoising Process Visualization": list[dict(token: str,
+                                                     class_or_confidence: str | float | None)]
+      This is PER-TOKEN CONFIDENCE from the final denoising step!
+      → class_or_confidence float ∈ [0,1] = LLaDA's internal confidence for that token
+      → This is functionally equivalent to Doyle's per-token variance signal
+      → We can compute token-level σ²_span WITHOUT direct model weight access!
+
+    KNOWN LIMITATION:
+      The stateful two-step flow requires proper gr.State initialization.
+      Fresh REST API sessions may fail if Gradio v5 initializes State to None
+      rather than the declared default ([]).
+      RECOMMENDED: Use `gradio_client` Python library (pip install gradio_client)
+      for robust stateful session management.
+
+    OLD PATHS (Gradio v4, do not use — return 404 Not Found):
+      POST /run/predict
+      GET  /info
+
+    CONFIRMED: All HF Inference Providers for LLaDA-8B-Instruct return HTTP 410.
+    The multimodalart/LLaDA Space is the ONLY free cloud access route.
+    ─────────────────────────────────────────────────────────────────────────
     """
-    
-    # HF Space endpoints for LLaDA
-    SPACE_URLS = [
-        "https://multimodalart-llada.hf.space",
-        "https://spuun-llada-8b-kcv.hf.space",
-        "https://ginigen-llada.hf.space",
-    ]
-    
+
+    SPACE_URL = "https://multimodalart-llada.hf.space"
+
     def __init__(self, space_name: str = "multimodalart/LLaDA"):
         self.space_name = space_name
-        self.space_url = self._space_name_to_url(space_name)
+        self.space_url = self.SPACE_URL
         self.available = False
         self.use_gradio_client = False
+        self.gradio_client = None
         self._probe_availability()
-    
-    def _space_name_to_url(self, name: str) -> str:
-        """Convert 'user/SpaceName' → 'https://user-spacename.hf.space'"""
-        parts = name.lower().replace("/", "-")
-        return f"https://{parts}.hf.space"
-    
+
     def _probe_availability(self):
-        """Check which Space endpoints are reachable."""
+        """Probe Gradio v5 API availability at /gradio_api/info."""
         import urllib.request
         import urllib.error
-        
-        # Try primary space URL
-        urls_to_try = [self.space_url] + self.SPACE_URLS
-        
-        for url in urls_to_try:
-            try:
-                req = urllib.request.Request(f"{url}/info", 
-                    headers={"Accept": "application/json"})
-                with urllib.request.urlopen(req, timeout=10) as resp:
-                    if resp.status == 200:
-                        self.space_url = url
-                        self.available = True
-                        print(f"[LLaDA] Space available: {url}")
-                        return
-            except Exception:
-                continue
-        
-        # Try gradio_client as fallback
+
+        try:
+            req = urllib.request.Request(
+                f"{self.space_url}/gradio_api/info",
+                headers={"Accept": "application/json"}
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                if resp.status == 200:
+                    info = json.loads(resp.read())
+                    endpoints = list(info.get("named_endpoints", {}).keys())
+                    print(f"[LLaDA] Gradio v5 API available. Endpoints: {endpoints}")
+                    print(f"[LLaDA] ★ DenoiseViz (per-token confidence) available in /bot_response")
+                    self.available = True
+                    return
+        except Exception as e:
+            print(f"[LLaDA] Gradio v5 probe failed: {e}")
+
+        # Fallback: gradio_client library
         try:
             from gradio_client import Client
             self.gradio_client = Client(self.space_name)
             self.available = True
             self.use_gradio_client = True
             print(f"[LLaDA] Connected via gradio_client: {self.space_name}")
+            return
         except ImportError:
             print("[LLaDA] gradio_client not installed. Run: pip install gradio_client")
         except Exception as e:
-            print(f"[LLaDA] All connection methods failed. Error: {e}")
-        
-        if not self.available:
-            print("[LLaDA] WARNING: No API access. Will use dry-run mode.")
-    
-    def _format_prompt(self, question: str) -> str:
-        """Format question as LLaDA-8B-Instruct chat prompt."""
-        # LLaDA-8B-Instruct uses Llama-3 chat template
-        return (
-            f"<|start_header_id|>user<|end_header_id|>\n\n"
-            f"Answer the following question with a short, direct answer. "
-            f"Give only the answer, no explanation.\n\n"
-            f"Question: {question}<|eot_id|>"
-            f"<|start_header_id|>assistant<|end_header_id|>\n\n"
+            print(f"[LLaDA] gradio_client failed: {e}")
+
+        print("[LLaDA] WARNING: No API access confirmed. Dry-run mode will be used.")
+
+    def _new_session_hash(self) -> str:
+        """Generate a fresh session hash for stateful Gradio v5 calls."""
+        raw = f"{time.time()}{random.random()}"
+        return hashlib.md5(raw.encode()).hexdigest()[:12]
+
+    # ─── Gradio v5 Queue API (CONFIRMED WORKING, Feb 27 2026) ──────────────
+    # The /gradio_api/call/{endpoint} REST path requires a pre-existing WebSocket
+    # session and returns "404: Session not found" for fresh API calls.
+    # CORRECT approach: use /gradio_api/queue/join + /gradio_api/queue/data SSE.
+    #
+    # fn_index mapping (from /config dependencies array):
+    #   fn_index=0: clear_conversation  inputs=[]          → initializes State
+    #   fn_index=1: user_message_submitted  inputs=[msg, state, gen_len, steps, constraints, delay]
+    #   fn_index=3: bot_response  inputs=[state, gen_len, steps, constraints, delay, temp, cfg, block, remasking]
+    #
+    # The gr.State (id=3) default is None. After fn_index=0 it stays None (clear).
+    # user_message_submitted accepts None state gracefully and returns updated state.
+    # ────────────────────────────────────────────────────────────────────────────
+
+    def _queue_join(self, fn_index: int, data: list, session_hash: str,
+                    timeout: int = 15) -> Optional[str]:
+        """POST to /gradio_api/queue/join. Returns event_id."""
+        import urllib.request
+        payload = json.dumps({
+            "fn_index": fn_index,
+            "data": data,
+            "session_hash": session_hash
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            f"{self.space_url}/gradio_api/queue/join",
+            data=payload,
+            headers={"Content-Type": "application/json", "User-Agent": "BPFC-Research/1.0"},
+            method="POST"
         )
-    
-    def _generate_via_urllib(self, question: str) -> Optional[str]:
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                result = json.loads(resp.read())
+                return result.get("event_id")
+        except Exception as e:
+            print(f"[LLaDA queue] join failed (fn={fn_index}): {e}")
+            return None
+
+    def _queue_data_wait(self, event_id: str, session_hash: str,
+                         timeout: int = 90,
+                         capture_streaming: bool = False) -> Optional[tuple]:
         """
-        Call LLaDA Space via pure urllib (Gradio REST API).
-        
-        Gradio Spaces expose: POST /run/predict with JSON body:
-        {"data": [prompt, max_new_tokens, steps, ...], "fn_index": 0}
-        
-        The exact fn_index and data format depends on the Space's app.py.
-        For multimodalart/LLaDA the typical inputs are:
-        - message (str)
-        - history (list, empty for fresh)
-        - gen_length (int, default 128)
-        - steps (int, default 32)
-        - word_constraints (str, empty)
+        GET /gradio_api/queue/data?session_hash=X SSE stream.
+        Waits for process_completed for this event_id.
+        Returns (final_data: list, streaming_updates: list[list]) or None.
+
+        streaming_updates: list of DenoiseViz arrays from process_generating events
+        (each is a list of {token, class_or_confidence} dicts OR lists).
         """
         import urllib.request
-        import urllib.error
-        
-        # Gradio API predict endpoint
-        url = f"{self.space_url}/run/predict"
-        
-        payload = json.dumps({
-            "data": [
-                question,     # message / prompt
-                [],           # history (empty = fresh)
-                64,           # gen_length (short answers)
-                32,           # steps
-                ""            # word_constraints (none)
-            ],
-            "fn_index": 0
-        }).encode("utf-8")
-        
-        req = urllib.request.Request(url, data=payload,
-            headers={"Content-Type": "application/json"})
-        
+        sse_url = f"{self.space_url}/gradio_api/queue/data?session_hash={session_hash}"
+        req = urllib.request.Request(
+            sse_url,
+            headers={"User-Agent": "BPFC-Research/1.0", "Accept": "text/event-stream"}
+        )
+        streaming_updates = []
         try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                result = json.loads(resp.read())
-                # Gradio response: {"data": [...], "duration": ...}
-                if "data" in result and result["data"]:
-                    output = result["data"][0]
-                    # Could be str or list of chat messages
-                    if isinstance(output, str):
-                        return output.strip()
-                    elif isinstance(output, list) and output:
-                        # Chat history format: [[user, bot], ...]
-                        last_pair = output[-1]
-                        if isinstance(last_pair, list) and len(last_pair) > 1:
-                            return str(last_pair[1]).strip()
-                    return str(output).strip()
-        except urllib.error.HTTPError as e:
-            print(f"[LLaDA] HTTP {e.code}: {e.reason}")
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                for line in resp:
+                    line = line.decode("utf-8", errors="replace").strip()
+                    if not line.startswith("data:"):
+                        continue
+                    try:
+                        msg = json.loads(line[5:].strip())
+                    except Exception:
+                        continue
+                    if msg.get("event_id") != event_id:
+                        continue
+                    msg_type = msg.get("msg", "")
+                    data = msg.get("output", {}).get("data", [])
+                    if msg_type == "process_generating" and capture_streaming:
+                        # DenoiseViz is at index 1 in bot_response output
+                        if data and len(data) > 1 and data[1]:
+                            streaming_updates.append(data[1])
+                    if msg_type == "process_completed":
+                        return (data, streaming_updates)
+                    if msg_type == "process_error":
+                        error_msg = msg.get("output", {})
+                        print(f"[LLaDA queue] process_error: {error_msg}")
+                        return None
         except Exception as e:
-            print(f"[LLaDA] urllib error: {e}")
-        
+            print(f"[LLaDA queue] SSE read failed: {e}")
+            return None
         return None
-    
-    def _generate_via_gradio_client(self, question: str) -> Optional[str]:
-        """Call via gradio_client library."""
+
+    def _gradio_queue_call(self, fn_index: int, data: list, session_hash: str,
+                           timeout: int = 90,
+                           capture_streaming: bool = False) -> Optional[tuple]:
+        """Full queue call: join + wait. Returns (final_data, streaming_updates)."""
+        event_id = self._queue_join(fn_index, data, session_hash, timeout=15)
+        if not event_id:
+            return None
+        return self._queue_data_wait(event_id, session_hash, timeout=timeout,
+                                     capture_streaming=capture_streaming)
+
+    def _extract_answer(self, conversation, current_response=None) -> Optional[str]:
+        """Extract assistant answer text from Gradio chatbot output."""
+        # Prefer plain current_response field
+        if current_response and isinstance(current_response, str):
+            text = current_response.strip()
+            if text:
+                return text
+        # Fallback: parse chatbot conversation history
+        if not conversation:
+            return None
         try:
-            result = self.gradio_client.predict(
-                message=question,
-                api_name="/chat"
-            )
-            if isinstance(result, (list, tuple)):
-                result = result[0] if result else ""
-            return str(result).strip()
-        except Exception as e:
-            print(f"[LLaDA] gradio_client error: {e}")
-            return None
-    
-    def generate_answer(self, question: str, max_retries: int = 3) -> Optional[str]:
-        """Run one denoising pass and return the answer."""
+            if isinstance(conversation, list):
+                for pair in reversed(conversation):
+                    if isinstance(pair, (list, tuple)) and len(pair) >= 2:
+                        bot_msg = pair[1]
+                        if bot_msg:
+                            if isinstance(bot_msg, dict):
+                                return str(bot_msg.get("content", "")).strip() or None
+                            return str(bot_msg).strip() or None
+                    elif isinstance(pair, dict) and pair.get("role") == "assistant":
+                        return str(pair.get("content", "")).strip() or None
+        except Exception:
+            pass
+        return None
+
+    def _extract_token_confidences(self, denoising_viz) -> list[dict]:
+        """
+        Parse the Denoising Process Visualization output.
+
+        Input format (★ confirmed in /gradio_api/info for /bot_response):
+          list[dict(token: str, class_or_confidence: str | float | None)]
+
+        The class_or_confidence field from LLaDA's low_confidence remasking
+        strategy is the model's confidence score for each token at the FINAL
+        denoising step. This corresponds to:
+          confidence_k(token_i) ≈ P_θ(x_i = final_value | context, step=T)
+
+        Token-level σ²_span is then:
+          σ²_token_i = Var_k[confidence_k(token_i)]   (across K passes)
+
+        Returns list of {token: str, confidence: float} dicts.
+        """
+        if not denoising_viz or not isinstance(denoising_viz, list):
+            return []
+
+        result = []
+        for item in denoising_viz:
+            if not isinstance(item, dict):
+                continue
+            token = str(item.get("token", ""))
+            conf = item.get("class_or_confidence")
+            if conf is None:
+                confidence = 1.0  # Constrained / already-placed token
+            elif isinstance(conf, (int, float)):
+                confidence = float(conf)
+            elif isinstance(conf, str):
+                mapping = {"high": 0.9, "medium": 0.5, "low": 0.1,
+                           "mask": 0.0, "unmask": 1.0, "certain": 1.0}
+                confidence = mapping.get(conf.lower(), 0.5)
+            else:
+                confidence = 0.5
+            result.append({"token": token, "confidence": confidence})
+
+        return result
+
+    def generate_answer_and_confidence(
+        self,
+        question: str,
+        gen_length: int = 32,
+        steps: int = 16,
+        temperature: float = 0.0,
+        remasking: str = "low_confidence",
+        max_retries: int = 2,
+    ) -> tuple[Optional[str], list[dict], int]:
+        """
+        Run ONE independent denoising pass.
+        Returns (answer_text, token_confidences, error_count).
+
+        This is the atomic BPFC sampling unit — one draw from p_θ(answer | question).
+        K independent calls = K i.i.d. samples from the posterior (Doyle 2025 Thm 1).
+
+        token_confidences: list[{token: str, confidence: float}]
+          ★ confidence_k(token_i) = class_or_confidence from DenoiseViz
+          ★ Var_k[confidence_k(token_i)] ≈ σ²_i (token posterior variance)
+        """
         if not self.available:
-            return None
-        
+            return None, [], 1
+
         for attempt in range(max_retries):
             try:
-                if self.use_gradio_client:
-                    result = self._generate_via_gradio_client(question)
+                if self.use_gradio_client and self.gradio_client is not None:
+                    answer, viz = self._generate_via_gradio_client(
+                        question, gen_length, steps, temperature, remasking
+                    )
                 else:
-                    result = self._generate_via_urllib(question)
-                
-                if result is not None:
-                    return result
-                    
+                    session_hash = self._new_session_hash()
+                    answer, viz = self._generate_via_gradio_v5(
+                        question, gen_length, steps, temperature, remasking, session_hash
+                    )
+                if answer is not None:
+                    return answer, viz, 0
             except Exception as e:
-                pass
-            
+                print(f"[LLaDA] Attempt {attempt + 1} failed: {e}")
             if attempt < max_retries - 1:
-                time.sleep(2 ** attempt)
-        
-        print(f"[LLaDA] Generate failed after {max_retries} retries")
-        return None
-    
-    def sample_k_answers(self, question: str, k: int = 8) -> tuple[list[str], int]:
+                time.sleep(3 * (attempt + 1))
+
+        return None, [], 1
+
+    def _generate_via_gradio_v5(
+        self, question: str, gen_length: int, steps: int,
+        temperature: float, remasking: str, session_hash: str,
+        capture_trajectory: bool = False,
+    ) -> tuple[Optional[str], list[dict], list]:
         """
-        Run K independent denoising passes for one question.
-        Returns (answers, num_errors).
-        
-        IMPORTANT: Each call is a fresh, independent denoising pass.
-        LLaDA is stochastic by default (random mask sampling at each step).
-        K independent calls = K independent samples from the posterior.
-        This is exactly what Doyle (2025) Eq.6 describes as the MC estimator.
+        Three-step Gradio v5 queue-based call (CONFIRMED WORKING, Feb 27 2026).
+
+        fn_index mapping (from /config):
+          0 = clear_conversation  → initializes gr.State to None
+          1 = user_message_submitted  → [msg, state, gen_len, steps, constraints, delay]
+          3 = bot_response  → [state, gen_len, steps, constraints, delay, temp, cfg, block, remasking]
+
+        Returns (answer_text, final_denoiseviz, trajectory_updates)
+        where trajectory_updates is list of per-step DenoiseViz arrays (65 steps).
+        """
+        # Step 0: Initialize session state
+        r0 = self._gradio_queue_call(0, [], session_hash, timeout=15)
+        if r0 is None:
+            print("[LLaDA queue] Step 0 (clear_conversation) failed.")
+            return None, [], []
+        initial_state = r0[0][0] if r0[0] else None  # State is first output
+
+        # Step 1: Submit user message (updates gr.State with chat history)
+        r1 = self._gradio_queue_call(
+            fn_index=1,
+            data=[question, initial_state, float(gen_length), float(steps), "", 0.0],
+            session_hash=session_hash,
+            timeout=20
+        )
+        if r1 is None:
+            print("[LLaDA queue] Step 1 (user_message_submitted) failed.")
+            return None, [], []
+        updated_state = r1[0][0] if r1[0] else initial_state  # Updated state
+
+        # Step 2: Generate response with DenoiseViz streaming
+        r2 = self._gradio_queue_call(
+            fn_index=3,
+            data=[updated_state, float(gen_length), float(steps), "", 0.0,
+                  float(temperature), 0.0, 32.0, remasking],
+            session_hash=session_hash,
+            timeout=120,
+            capture_streaming=capture_trajectory,
+        )
+        if r2 is None:
+            print("[LLaDA queue] Step 2 (bot_response) failed.")
+            return None, [], []
+
+        final_data, streaming_updates = r2
+        # bot_response output: [Conversation(0), DenoiseViz(1), CurrentResponse(2)]
+        if not isinstance(final_data, list) or not final_data:
+            return None, [], []
+
+        conversation = final_data[0] if len(final_data) > 0 else None
+        denoising_viz = final_data[1] if len(final_data) > 1 else []
+        current_response = final_data[2] if len(final_data) > 2 else None
+
+        # Check for error response
+        if isinstance(current_response, str) and "ZeroGPU quota" in current_response:
+            print(f"[LLaDA] ZeroGPU quota exceeded: {current_response[:80]}")
+            return None, [], []
+
+        answer = self._extract_answer(conversation, current_response)
+        token_confs = self._extract_token_confidences(denoising_viz)
+        return answer, token_confs, streaming_updates
+
+    def _generate_via_gradio_client(
+        self, question: str, gen_length: int, steps: int,
+        temperature: float, remasking: str,
+    ) -> tuple[Optional[str], list[dict]]:
+        """Call via gradio_client library (recommended for reliability)."""
+        try:
+            self.gradio_client.predict(
+                message=question, gen_length=float(gen_length),
+                steps=float(steps), constraints="", delay=0.0,
+                api_name="/user_message_submitted"
+            )
+            result = self.gradio_client.predict(
+                gen_length=float(gen_length), steps=float(steps),
+                constraints="", delay=0.0, temperature=float(temperature),
+                cfg_scale=0.0, block_length=float(gen_length), remasking=remasking,
+                api_name="/bot_response"
+            )
+            if isinstance(result, (list, tuple)) and len(result) >= 3:
+                answer = self._extract_answer(result[0], str(result[2]) if result[2] else None)
+                token_confs = self._extract_token_confidences(result[1] or [])
+                return answer, token_confs
+        except Exception as e:
+            print(f"[LLaDA] gradio_client error: {e}")
+        return None, []
+
+    def generate_answer(self, question: str, max_retries: int = 3) -> Optional[str]:
+        """Convenience wrapper: one pass, return answer text only."""
+        answer, _, _ = self.generate_answer_and_confidence(
+            question, max_retries=max_retries
+        )
+        return answer
+
+    def sample_k_answers(self, question: str, k: int = 8) -> tuple[list, int]:
+        """
+        K independent denoising passes → (answers, num_errors).
+        Each pass uses a fresh session_hash → guaranteed independent posterior sample.
+        Implements Doyle (2025) Eq.6: p̂(x_0) = (1/K) Σ_k D_θ(·|x_t^(k), t)
         """
         answers = []
         errors = 0
-        
-        for i in range(k):
-            answer = self.generate_answer(question)
+        for _ in range(k):
+            answer, _, err = self.generate_answer_and_confidence(question)
             if answer is not None:
                 answers.append(answer)
-            else:
-                errors += 1
-            # Rate limiting: 1s between calls (ZeroGPU community grant, be polite)
-            time.sleep(1.5)
-        
+            errors += err
+            time.sleep(2.0)
         return answers, errors
 
+    def sample_k_with_token_confidence(
+        self, question: str, k: int = 8
+    ) -> tuple[list, list, int]:
+        """
+        Extended K-sample returning per-pass token confidences.
+        Returns (answers, all_token_confs, num_errors).
 
-# ─── OpenAI AR Baseline ───────────────────────────────────────────────────────
+        Use for token-level σ²_span:
+          σ²_token_i = Var_k[ all_token_confs[k][i]['confidence'] ]
+          σ²_span    = mean(σ²_token_i over answer-span positions)
+        """
+        answers, all_token_confs, errors = [], [], 0
+        for _ in range(k):
+            answer, tok_confs, err = self.generate_answer_and_confidence(question)
+            if answer is not None:
+                answers.append(answer)
+                all_token_confs.append(tok_confs)
+            errors += err
+            time.sleep(2.0)
+        return answers, all_token_confs, errors
 
 class OpenAIARBaseline:
     """

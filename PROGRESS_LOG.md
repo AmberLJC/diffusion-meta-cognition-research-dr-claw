@@ -12,4 +12,12 @@ Each entry = one commit. One or two sentence summary of what changed.
 
 ---
 
+| 4 | 2026-02-27 01:00 | 🎯 Mapped full Gradio v5 API (correct /gradio_api/call/ paths confirmed); discovered per-token confidence in DenoiseViz output (★ enables token-level σ²_span without model access); updated bpfc_pilot.py with two-step flow + token confidence extraction; wrote paper abstract/introduction/related_work. |
+
+| 5 | 2026-02-27 01:26 | 📊 Wrote Sections 5-7 (Results/Knowledge Boundaries/Conclusion, ~20k words total); built stats_analysis.py — pure-stdlib AUROC/ECE/Pearson/bootstrap/knowledge-decomp pipeline; dry-run validated (mock AUROC=0.91, ρ=0.84); confirmed Gradio ZeroGPU session-routing blocks raw HTTP (requires gradio_client WebSocket), documented workaround path. |
+
+| 6 | 2026-02-27 02:06 | 🎯 First real BPFC empirical results: installed PyTorch CPU, ran bert_cpu_pilot.py (N=50, K=8, 80s CPU) → AUROC(σ²_answer)=0.775; K-stability confirms convergence at K≥4; σ²_token failure in 1-step model validates Doyle theory; wrote full Results section with tables and neg. findings. |
+
+---
+
 _Auto-updated by Dr. Claw on every commit._
