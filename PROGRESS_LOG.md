@@ -20,6 +20,8 @@ Each entry = one commit. One or two sentence summary of what changed.
 | 7 | 2026-02-27 02:21 | 📊 K-stability sweep (N=100, K∈{1,2,3,4,6,8,12,16}) experiment launched (k_stability_analysis.py); compiled complete 8-section paper into FULL_PAPER_DRAFT.md (951 lines, ~8,237 words); awaiting K-sweep results to update results section with larger-N validation. |
 | 8 | 2026-02-27 02:36 | 🔬 Wrote AR baseline experiment (ar_baseline_gpt4omini.py): GPT-4o-mini K=8 Semantic Entropy vs BPFC; dry-run validated; added Section 5.9 AR comparison to paper; diagnosed and fixed K-stability bug (σ²_answer was accidentally gold-dependent → AUROC=0.12; corrected gold-free metric gives AUROC=0.775 at K=8, monotone convergence K=1..8); wrote k_stability_reanalysis.py with bootstrapped K-sweep. |
 
+| 9 | 2026-02-27 02:51 | 🔧 Fixed AUROC inversion bug in simulation_study.py (sorted descending but used ascending formula → true AUROC was 1-0.347=0.653); wrote simulation_study_v2.py with corrected model (N=300, 10 seeds → AUROC=0.719±0.021, ρ=0.535); added Section 5.7 Simulation Study to FULL_PAPER_DRAFT.md; trimmed abstract to 148 words (ACL target). |
+
 ---
 
 _Auto-updated by Dr. Claw on every commit._
