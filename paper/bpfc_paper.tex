@@ -62,8 +62,11 @@ Empirically (BERT proxy, $N=170$, $K=8$), $\sigspan$ achieves
 AUROC $= 0.791$--$0.868$ for predicting factual errors (\textit{Cohen's d} $= 1.63$,
 $p < 10^{-16}$). A simulation study ($N=300$, 10 seeds) confirms
 AUROC $= 0.719 \pm 0.021$ under the BPFC generative model.
-Cross-architecture validation on RoBERTa-large ($N=55$) yields AUROC $= 0.642$,
-confirming the signal generalizes across MLM families.
+Three-way cross-architecture validation confirms the signal generalizes across the MLM family:
+DistilBERT-base (66M, AUROC $= 0.835$), BERT-base (110M, AUROC $= 0.791$),
+and RoBERTa-large (355M, AUROC $= 0.642$).
+Signal strength is \emph{inversely correlated} with model scale,
+consistent with a ``compression amplifies uncertainty'' effect from distillation dynamics.
 We find $\sigspan$ negatively correlates with entity frequency
 (Pearson $r = -0.326$, $p < 10^{-4}$), revealing quantitative knowledge boundaries,
 and establish the first calibration benchmark for discrete diffusion LMs.

@@ -1,0 +1,43 @@
+{
+  "model": "distilbert-base-uncased",
+  "params_M": 66,
+  "methodology": "temperature_sampling_K8",
+  "n": 50,
+  "k": 8,
+  "temperature": 1.0,
+  "accuracy": 0.4,
+  "elapsed_s": 5.1,
+  "bpfc": {
+    "auroc_mean": 0.835,
+    "auroc_ci_lo": 0.7037337662337663,
+    "auroc_ci_hi": 0.939047619047619
+  },
+  "majority_conf": {
+    "auroc_mean": 0.8241666666666667
+  },
+  "cohens_d": 1.2210241978406497,
+  "mean_sigma2_correct": 0.4875,
+  "mean_sigma2_wrong": 0.7510416666666667,
+  "tier_breakdown": {
+    "easy": {
+      "acc": 0.3,
+      "mean_sigma2": 0.6890625,
+      "n": 20
+    },
+    "medium": {
+      "acc": 0.4666666666666667,
+      "mean_sigma2": 0.6083333333333333,
+      "n": 15
+    },
+    "hard": {
+      "acc": 0.4666666666666667,
+      "mean_sigma2": 0.625,
+      "n": 15
+    }
+  },
+  "comparison": {
+    "distilbert_auroc": 0.835,
+    "bert_auroc": 0.791,
+    "roberta_auroc": 0.642
+  }
+}

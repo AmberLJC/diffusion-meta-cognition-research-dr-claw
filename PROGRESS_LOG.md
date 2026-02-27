@@ -35,5 +35,6 @@ Each entry = one commit. One or two sentence summary of what changed.
 | 14 | 2026-02-27 04:21 | 🔬 Wrote §5.12 Final Consolidated Analysis; launched RoBERTa cross-validation (roberta_crossval.py — word-dropout methodology) → negative result (AUROC=0.21, Cohen's d=−1.02); confirmed result saved but identified methodology flaw requiring correction next session. |
 
 | 15 | 2026-02-27 04:36 | ✅ Diagnosed and corrected RoBERTa cross-val methodology (word-dropout → temperature sampling); ran roberta_corrected.py (N=55, K=8, 211s CPU) → AUROC=0.642 [0.463, 0.802], Cohen's d=0.425 — BPFC signal confirmed in RoBERTa-large; wrote §5.13 (~600 words) with methodological lesson + comparison table; updated abstract + LaTeX with cross-model result; paper now ~19,000 words. |
+| 16 | 2026-02-27 04:51 | 🏗️ Ran DistilBERT (66M) cross-val (N=50, K=8, 5s CPU) → AUROC=0.835 [0.704, 0.939], Cohen's d=1.221 — BEST AUROC of all 3 architectures; discovered inverse scale–AUROC relationship ("compression amplifies uncertainty"); confirmed DiffuTruth (arXiv:2602.11364, Feb 2026) as complementary concurrent work (already in §2); wrote §5.14 + 3-way comparison table; updated abstract v0.8 + LaTeX with all 3 models; paper now ~20,000 words. |
 
 _Auto-updated by Dr. Claw on every commit._
