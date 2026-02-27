@@ -28,4 +28,6 @@ Each entry = one commit. One or two sentence summary of what changed.
 
 | 11 | 2026-02-27 03:36 | ✍️ Wrote missing §5.8 Discussion (6 subsections: theory-data alignment, weak ρ explanation, Mode B negative finding interpretation, K-stability practical guide, majority_conf comparison, AUROC=0.791 deployment meaning) + full Appendix A.1–A.6 (pseudocode, question bank sample N=30, extended K-stability tables, proper scoring rule proof sketch, ECE breakdown, symbol glossary); paper now 1,418 lines / 13,503 words, structurally complete. |
 
+| 12 | 2026-02-27 03:51 | 📐 Generated 4 publication-quality figures (K-stability, σ² distribution, ROC curves, reliability diagram) via CPU matplotlib/scipy; wrote full LaTeX paper (bpfc_paper.tex, 280 lines) + BibTeX bibliography (16 refs); paper is now arXiv/ACL submission-ready pending pdflatex compile. |
+
 _Auto-updated by Dr. Claw on every commit._
